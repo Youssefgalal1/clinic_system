@@ -21,6 +21,8 @@ return new class extends Migration
             $table->integer('experience_years');
             $table->decimal('rating', 3, 2)->default(0);
             $table->timestamps();
+            $table->string('image')->nullable();
+
         });
     }
 

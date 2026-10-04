@@ -11,41 +11,41 @@ class DoctorPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $authuser): bool
     {
-        return false;
+        return $authuser->role === 'admin';
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Doctor $doctor): bool
+    public function view(User $authuser, Doctor $doctor): bool
     {
-        return false;
+        return $authuser->role === 'admin' || $doctor->user_id == $authuser->id;
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $authuser): bool
     {
-        return false;
+        return $authuser->role === 'admin';
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Doctor $doctor): bool
+    public function update(User $authuser, Doctor $doctor): bool
     {
-        return false;
+        return $authuser->role === 'admin' || $doctor->user_id == $authuser->id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Doctor $doctor): bool
+    public function delete(User $authuser, Doctor $doctor): bool
     {
-        return false;
+        return $authuser->role === 'admin' || $authuser->id !== $doctor->id;
     }
 
     /**

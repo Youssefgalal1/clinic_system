@@ -18,6 +18,7 @@ class Doctor extends Model
         'fees',
         'experience_years',
         'rating',
+        'image',
     ];
 
     public function user()

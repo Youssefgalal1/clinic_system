@@ -30,6 +30,7 @@ class UpdateDoctorRequest extends FormRequest
             'fees'              => ['required', 'integer', 'min:100'],
             'experience_years'  => ['required', 'integer', 'min:1', 'max:50'],
             'rating'            => ['nullable', 'numeric', 'min:1', 'max:9.99'],
+            'image'             => ['required','image','mimes:jpg,jpeg,png,gif'],
         ];
     }
 }

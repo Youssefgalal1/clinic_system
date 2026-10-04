@@ -26,8 +26,8 @@ class StoreAppointmentRequest extends FormRequest
             'user_id'          => ['required', 'exists:users,id'],
             'doctor_id'        => ['required', 'exists:doctors,id'],
             'clinic_id'        => ['required', 'exists:clinics,id'],
-            'appointment_date' => ['required', 'datetime', 'after:now'],
-            'status'           => ['required', 'in:pending,confirmed,cancelled,completed'],
+            'appointment_date' => ['required', 'date_format:Y-m-d H:i:s', 'after:now'],
+            'status'           => ['in:pending,confirmed,cancelled,completed'],
         ];
     }
 }

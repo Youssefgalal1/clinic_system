@@ -65,4 +65,21 @@ class AppointmentPolicy
     {
         return false;
     }
+
+    public function confirm(User $user,Appointment $appointment): bool
+    {
+    return $user->role === 'admin'|| $user->id == $appointment->doctor_id;
+    }
+
+    public function complete(User $user,Appointment $appointment): bool
+    {
+        return $user->role === "admin" || $user->id == $appointment->doctor_id;
+    }
+
+    public function cancel(User $user,Appointment $appointment): bool
+    {
+        return $user->role === "admin" 
+        || $user->id == $appointment->doctor_id 
+        || $user->id == $appointment->user_id;
+    }
 }

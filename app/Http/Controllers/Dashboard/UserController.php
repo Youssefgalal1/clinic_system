@@ -10,9 +10,11 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Traits\apiResponse;
 
 class UserController extends Controller
 {
+    use apiResponse;
     public function testRequest(Request $request){
         return response()->json(['data'=>$request-> header()]);
     }
@@ -33,7 +35,7 @@ class UserController extends Controller
         $query->orderBy($request->query('sort') ?? 'id');
        }
        $users = $query->paginate(10);
-       return UserResource::collection($users);
+       return $this->apiResponse(UserResource::collection($users), 'data retrived successfuly');
     }
 
     /**
@@ -43,7 +45,7 @@ class UserController extends Controller
     {
         $this->authorize('view', $user);
         //
-        return new UserResource($user);
+        return $this->apiResponse(new UserResource($user), 'user retrived successfuly');
         // return $request->user(); by token sent in header
         // return response()->json(['message'=>'user retrived successfuly', 'data'=>$user]);
     }
@@ -57,9 +59,7 @@ class UserController extends Controller
         $validated['password'] = Hash::make($validated['password']);
         //store the data
         $data = User::create($validated);
-        return response()->json([
-        'message'=>'data stored successfuly',    
-        'user'=> new UserResource($data)]);
+        return $this->apiResponse(new UserResource($data), 'data stored successfuly');
     }
 
 
@@ -76,9 +76,7 @@ class UserController extends Controller
         //update data
         $user->update($validated);
         //redirect to index
-        return response()->json([
-        'message'=>'data updated successfuly',    
-        'data'=>new UserResource($user)]);
+        return $this->apiResponse(new UserResource($user), 'data updated successfuly');
     }
 
     /**
@@ -92,8 +90,6 @@ class UserController extends Controller
 
         $user->delete();
 
-        return response()->json([
-            'message' => 'data deleted successfully'
-        ]);
+        return $this->apiResponse(null, 'data deleted successfully');
     }
 }

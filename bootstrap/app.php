@@ -1,15 +1,16 @@
 <?php
 
+use App\Http\Middleware\RoleMiddleware;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\RoleMiddleware;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Exceptions\AppointmentException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -25,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (
+        // catch the exeption
         ValidationException $e,
         Request $request
         ) {
@@ -74,4 +76,25 @@ return Application::configure(basePath: dirname(__DIR__))
             ], 403);
         }
         });
+        $exceptions->render(
+        function (
+            AppointmentException $e,
+            Request $request
+            ) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ], 422);
+            }
+        );
+        // Glopal Exeption Handler
+        // $exceptions->render(function (
+        //     Throwable $e,
+        //     Request $request
+        // ) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Something went wrong.',
+        //     ], 500);
+        // });
     })->create();
